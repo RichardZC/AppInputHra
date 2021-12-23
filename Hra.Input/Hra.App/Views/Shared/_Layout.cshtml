@@ -9,28 +9,28 @@
         <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
         <link href="~/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
     </head>
-    <body data-topbar="colored" data-layout="horizontal">
+    <body data-topbar="light" data-layout="horizontal">
         <div id="layout-wrapper">
             <header id="page-topbar">
                 <div class="navbar-header">
                     <div class="d-flex">
                         <!-- LOGO -->
                         <div class="navbar-brand-box">
-                            <a href="index.html" class="logo logo-dark">
+                            <a href="@Url.Action("Index","Home")" class="logo logo-dark">
                                 <span class="logo-sm">
-                                    <img src="~/assets/images/logo.svg" alt="" height="22">
+                                    <img src="~/assets/images/logo-dark.png" alt="" height="60">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="~/assets/images/logo-dark.png" alt="" height="17">
+                                    <img src="~/assets/images/logo-dark.png" alt="" height="65">
                                 </span>
                             </a>
 
-                            <a href="index.html" class="logo logo-light">
+                            <a href="@Url.Action("Index","Home")" class="logo logo-light">
                                 <span class="logo-sm">
-                                    <img src="~/assets/images/logo-light.svg" alt="" height="22">
+                                    <img src="~/assets/images/logo-dark.png" alt="" height="60">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="~/assets/images/logo-light.png" alt="" height="19">
+                                    <img src="~/assets/images/logo-light.png" alt="" height="65">
                                 </span>
                             </a>
                         </div>
@@ -104,7 +104,7 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="~/assets/images/users/avatar-2.jpg"
+                                <img class="rounded-circle header-profile-user" src="~/assets/images/users/avatar.jpg"
                                     alt="Header Avatar">
                                 <span class="d-none d-xl-inline-block ms-1" key="t-henry">Richard</span>
                                 <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
@@ -136,8 +136,8 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
 
-                                        <a href="index.html" class="dropdown-item" key="t-default">Default</a>
-                                        <a href="dashboard-saas.html" class="dropdown-item" key="t-saas">Saas</a>
+                                        <a href="@Url.Action("Index","Especialidades")" class="dropdown-item" key="t-default">Ingreso1</a>
+                                        <a href="@Url.Action("Index","Especialidades")" class="dropdown-item" key="t-saas">Inreso2</a>
                                     </div>
                                 </li>                                                          
                                 <li class="nav-item dropdown">
@@ -147,7 +147,7 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
 
-                                        <a href="index.html" class="dropdown-item" key="t-default">Default</a>
+                                        <a href="@Url.Action("Index","Uci")" class="dropdown-item" key="t-default">Ingreso1</a>
                                     </div>
                                 </li>                                                              
 
