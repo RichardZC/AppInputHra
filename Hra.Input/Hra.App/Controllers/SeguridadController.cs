@@ -1,12 +1,28 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Hra.Infraestructure.Data;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.DirectoryServices;
 using System.Security.Claims;
+using Hra.Transversal.Common;
+using Hra.App.Models;
+using Microsoft.Data.SqlClient;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace Hra.App.Controllers
 {
     public class SeguridadController : Controller
     {
+        private readonly INPUTContext context;
+        private readonly IConstante constante;
+
+        public SeguridadController(INPUTContext context,IConstante constante)
+        {
+            this.context = context;
+            this.constante = constante;
+        }
+
         public IActionResult Index(string mensaje="")
         {
             if (User.Identity.IsAuthenticated)
@@ -20,14 +36,12 @@ namespace Hra.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Autenticar(string pUsuario, string pClave)
         {
-            string path = @"LDAP://adhra.hrayacucho.gob.pe";       //CAMBIAR POR VUESTRO PATH (URL DEL SERVICIO DE DIRECTORIO LDAP)
-            string dominio = @"adhra";             //CAMBIAR POR VUESTRO DOMINIO
-            string usu = pUsuario;                   //USUARIO DEL DOMINIO
-            string pass = pClave;                    //PASSWORD DEL USUARIO
-            string domUsu = dominio + @"\" + usu;               //CADENA DE DOMINIO + USUARIO A COMPROBAR
+            bool permiso;
+            if (constante.UsaDominio == "1")
+                permiso = AutenticaUsuarioAD(constante.Ldap, constante.Dominio + @"\" + pUsuario, pClave);
+            else
+                permiso = await AutenticaUsuario(pUsuario, pClave);
 
-            bool permiso = AutenticaUsuario(path, domUsu, pass);
-            
             if (permiso)
             {
                 List<Claim> claims = new List<Claim> {
@@ -37,6 +51,10 @@ namespace Hra.App.Controllers
                 var userPrincipal = new ClaimsPrincipal(new[] { identity });
 
                 await HttpContext.SignInAsync(userPrincipal);
+
+                //var str = JsonConvert.SerializeObject(obj);
+                //HttpContext.Session.SetString(key, str);
+
             }
             else
             {
@@ -45,22 +63,24 @@ namespace Hra.App.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-        private bool AutenticaUsuario(String path, String user, String pass)
+        private async Task<bool> AutenticaUsuario(String user, String pass)
+        {            
+            var param1 = new SqlParameter("@Usuario", user);
+            var param2 = new SqlParameter("@Clave", pass);
+            var result = await context.UspAutenticarUsuario.FromSqlRaw("exec Maestro.uspAutenticarUsuario @Usuario", param1, param2).ToListAsync();
+            return result[0].Permiso;
+        }
+        private bool AutenticaUsuarioAD(String path, String user, String pass)
         {
-            //Los datos que hemos pasado los 'convertimos' en una entrada de Active Directory para hacer la consulta
             DirectoryEntry de = new DirectoryEntry(path, user, pass, AuthenticationTypes.Secure);
             try
             {
-                //Inicia el chequeo con las credenciales que le hemos pasado
-                //Si devuelve algo significa que ha autenticado las credenciales
                 DirectorySearcher ds = new DirectorySearcher(de);
                 var ccc = ds.FindOne();
                 return true;
             }
             catch
             {
-                //Si no devuelve nada es que no ha podido autenticar las credenciales
-                //ya sea porque no existe el usuario o por que no son correctas
                 return false;
             }
         }

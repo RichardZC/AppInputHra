@@ -31,12 +31,16 @@ namespace Hra.Infraestructure.Data
         {
             modelBuilder.Entity<Tabla>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.TablaId, e.ItemId });
 
                 entity.ToTable("Tabla", "Maestro");
 
                 entity.Property(e => e.Denominacion)
-                    .HasMaxLength(250)
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DesCorta)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Valor)

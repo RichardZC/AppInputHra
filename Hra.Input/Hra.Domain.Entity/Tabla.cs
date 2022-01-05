@@ -9,5 +9,6 @@ namespace Hra.Domain.Entity
         public int ItemId { get; set; }
         public string Denominacion { get; set; } = null!;
         public string? Valor { get; set; }
+        public string? DesCorta { get; set; }
     }
 }

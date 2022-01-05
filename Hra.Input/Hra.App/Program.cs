@@ -1,6 +1,12 @@
+using Hra.App.Models;
+using Hra.Infraestructure.Data;
+using Microsoft.EntityFrameworkCore;
+
+var Constantes = new Constante();
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.GetSection("Constante").Bind(Constantes);
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("Hra").AddCookie("Hra", config =>
 {
@@ -9,6 +15,9 @@ builder.Services.AddAuthentication("Hra").AddCookie("Hra", config =>
     config.AccessDeniedPath = "/Home";
     config.ExpireTimeSpan = TimeSpan.FromHours(8);
 });
+
+builder.Services.AddSingleton<IConstante>(Constantes);
+builder.Services.AddDbContext<INPUTContext>(db => db.UseSqlServer(builder.Configuration.GetConnectionString("connectionDB")));
 
 var app = builder.Build();
 

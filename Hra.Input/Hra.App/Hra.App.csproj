@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Hra.Domain.Entity\Hra.Domain.Entity.csproj" />
     <ProjectReference Include="..\Hra.Infraestructure.Data\Hra.Infraestructure.Data.csproj" />
+    <ProjectReference Include="..\Hra.Transversal.Common\Hra.Transversal.Common.csproj" />
   </ItemGroup>
 
 </Project>
